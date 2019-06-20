@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from basic_app.forms import UserForm, UserProfileInfoForm
+from basic_app.forms import UserForm, UserProfileInfoForm, MicroPostForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
 
 # Create your views here.
 def index(request):
@@ -77,3 +77,25 @@ def user_login(request):
     
     else:
         return render(request, 'basic_app/login.html', {})
+
+@login_required
+def micropost(request):
+
+    posted = False
+
+    if request.method == 'POST':
+        micropost_form = MicroPostForm(data=request.POST)
+        if micropost_form.is_valid():
+            micropost = micropost_form.save(commit=False)
+            #micropost.pub_date = timezone.now()
+            micropost.user = request.user
+            micropost.save()
+            posted = True
+            print("saved{}".format(micropost.content))
+        else:
+            print(micropost_form.errors)
+    else:
+        micropost_form = MicroPostForm()
+
+    return render(request, 'basic_app/micropost.html', {'micropost_form': micropost_form,
+                                                        'posted': posted})

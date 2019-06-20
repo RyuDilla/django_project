@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from basic_app.models import UserProfileInfo
+from basic_app.models import UserProfileInfo, MicroPost
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -13,3 +13,8 @@ class UserProfileInfoForm(forms.ModelForm):
     class Meta():
         model = UserProfileInfo
         fields = ('portfolio_site','profile_pic')
+
+class MicroPostForm(forms.ModelForm):
+    class Meta():
+        model = MicroPost
+        fields = ('content',)

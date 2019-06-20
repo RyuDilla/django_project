@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 
@@ -14,3 +15,8 @@ class UserProfileInfo(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class MicroPost(models.Model):
+    content = models.TextField(max_length=140)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    pub_date = models.DateTimeField(default=timezone.now())
